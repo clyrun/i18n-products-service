@@ -1,0 +1,53 @@
+version: '3'
+
+networks:
+  backend_network:
+
+services:
+  service-products:
+    build:
+      context: .
+      dockerfile: ./service-products/dockerfile
+      args:
+        CONTAINER_ID: service-products
+    tty: true
+    deploy:
+      replicas: 1
+    networks:
+      - backend_network
+    volumes:
+      - ./service-products/src:/var/www:cached
+
+  service-products-mysql:
+    image: mysql:5.7.22
+    restart: unless-stopped
+    deploy:
+      mode: global
+    ports:
+      - "3315:3306"
+    env_file:
+      - ./mysql.config.env
+    networks:
+      - backend_network
+    volumes:
+      - service-products-mysql-volume:/var/lib/mysql
+
+  service-nginx:
+    image: service-nginx:latest
+    build:
+      context: .
+      dockerfile: ./service-nginx/dockerfile
+      args:
+        CONTAINER_ID: service-nginx
+    deploy:
+      replicas: 1
+    ports:
+      - "80:80"
+    networks:
+      - backend_network
+    volumes:
+      - ./service-products/src/public:/var/www/public:cached
+
+volumes:
+  service-products-mysql-volume:
+    driver: local
