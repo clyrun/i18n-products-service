@@ -10,7 +10,7 @@ use App\Exceptions\ProductExceptions\ProductNotFound;
 use App\Models\ProductTranslation;
 
 /**
- * Class APIResponse
+ * Class ProductService
  * @package App
  */
 class ProductService
