@@ -58,7 +58,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Update a Product
+     * Delete a Product
      *
      * @param $product_id
      * @return \Illuminate\Contracts\Routing\ResponseFactory|Response
